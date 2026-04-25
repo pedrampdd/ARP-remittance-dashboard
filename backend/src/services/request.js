@@ -5,7 +5,6 @@ const zlib = require('zlib');
 const { URL } = require('url');
 
 
-// Helper func since all these urls are blocked in my region
 const PROXY = process.env.https_proxy || process.env.HTTPS_PROXY || process.env.http_proxy;
 
 function collectResponse(res, resolve, reject) {
