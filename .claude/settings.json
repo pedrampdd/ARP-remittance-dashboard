@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "playwright": {
+      "command": "npx",
+      "args": ["@playwright/mcp@latest", "--headless"],
+      "env": {
+        "https_proxy": "http://127.0.0.1:10808/",
+        "http_proxy": "http://127.0.0.1:10808/"
+      }
+    }
+  }
+}
