@@ -1,0 +1,9 @@
+# Normalize line endings to LF on checkin
+* text=auto eol=lf
+
+# Binary files — no diffing or line-ending conversion
+*.xlsx binary
+*.pdf  binary
+*.png  binary
+*.jpg  binary
+*.zip  binary

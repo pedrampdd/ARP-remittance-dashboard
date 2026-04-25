@@ -1,0 +1,35 @@
+# Dependencies
+node_modules/
+
+# Build output
+frontend/dist/
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+logs/
+
+# Playwright / test artifacts
+frontend/test-results/
+frontend/playwright-report/
+.playwright-mcp/
+
+# ZIP artifacts (binary build leftovers)
+*.zip
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+*.swp
+*.swo
+.idea/
+
+# Claude Code local settings (machine-specific permission overrides)
+.claude/settings.local.json
+.claude/agent-memory/

@@ -4,7 +4,11 @@
   "description": "Backend for ARP Digital GPS Dashboard",
   "main": "src/index.js",
   "scripts": {
-    "start": "node src/index.js"
+    "start": "node src/index.js",
+    "test": "jest --testPathPattern=src/tests"
+  },
+  "jest": {
+    "testEnvironment": "node"
   },
   "dependencies": {
     "axios": "^1.6.0",
@@ -15,5 +19,8 @@
   },
   "engines": {
     "node": ">=14.0.0"
+  },
+  "devDependencies": {
+    "jest": "^28.1.3"
   }
 }
