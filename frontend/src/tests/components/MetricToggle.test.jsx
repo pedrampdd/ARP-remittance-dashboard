@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import MetricToggle from '../components/MetricToggle.jsx';
+import MetricToggle from '../../components/MetricToggle.jsx';
 
 describe('MetricToggle', () => {
   it('renders all three metric buttons', () => {
@@ -16,14 +16,14 @@ describe('MetricToggle', () => {
     expect(screen.getByText('Metric')).toBeInTheDocument();
   });
 
-  it('applies active class to the selected metric button', () => {
+  it('applies active class only to the selected metric button', () => {
     render(<MetricToggle value="premium" onChange={() => {}} />);
     expect(screen.getByRole('button', { name: 'USDT Premium' })).toHaveClass('active');
     expect(screen.getByRole('button', { name: 'Composite' })).not.toHaveClass('active');
     expect(screen.getByRole('button', { name: 'Remittance' })).not.toHaveClass('active');
   });
 
-  it('calls onChange with the key (not label) when clicking Remittance', async () => {
+  it('calls onChange with the key when clicking Remittance', async () => {
     const user = userEvent.setup();
     const onChange = vi.fn();
     render(<MetricToggle value="composite" onChange={onChange} />);

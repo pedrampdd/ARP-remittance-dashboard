@@ -1,11 +1,11 @@
-const { currencyMap, countryToIso3 } = require('../data/currencyMap');
+const { currencyMap, countryToIso3 } = require('../../data/currencyMap');
 
 describe('currencyMap', () => {
   test('maps India to INR', () => {
     expect(currencyMap['India']).toBe('INR');
   });
 
-  test('maps Egypt with KNOMAD comma-format key', () => {
+  test('maps Egypt using KNOMAD comma-format key', () => {
     expect(currencyMap['Egypt, Arab Rep.']).toBe('EGP');
   });
 
@@ -31,7 +31,7 @@ describe('countryToIso3', () => {
     expect(countryToIso3['India']).toBe('IND');
   });
 
-  test('maps Egypt with KNOMAD comma-format key', () => {
+  test('maps Egypt using KNOMAD comma-format key', () => {
     expect(countryToIso3['Egypt, Arab Rep.']).toBe('EGY');
   });
 
@@ -53,16 +53,14 @@ describe('map structural integrity', () => {
     expect(Object.keys(currencyMap).sort()).toEqual(Object.keys(countryToIso3).sort());
   });
 
-  test('all currency codes are 3-letter strings', () => {
-    Object.entries(currencyMap).forEach(([country, code]) => {
-      expect(typeof code).toBe('string');
+  test('all currency codes are 3-letter uppercase strings', () => {
+    Object.values(currencyMap).forEach(code => {
       expect(code).toMatch(/^[A-Z]{3}$/);
     });
   });
 
-  test('all ISO3 codes are 3-letter strings', () => {
-    Object.entries(countryToIso3).forEach(([country, iso3]) => {
-      expect(typeof iso3).toBe('string');
+  test('all ISO3 codes are 3-letter uppercase strings', () => {
+    Object.values(countryToIso3).forEach(iso3 => {
       expect(iso3).toMatch(/^[A-Z]{3}$/);
     });
   });

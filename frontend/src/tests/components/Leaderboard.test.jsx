@@ -1,85 +1,38 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import Leaderboard from '../components/Leaderboard.jsx';
+import Leaderboard from '../../components/Leaderboard.jsx';
 
 const corridorOK = {
-  destinationName: 'India',
-  p2pStatus: 'OK',
-  score: 85,
-  premium: 0.12,
-  flowUSD: 500_000_000,
-  currencyCode: 'INR',
-  iso3: 'IND',
+  destinationName: 'India', p2pStatus: 'OK', score: 85,
+  premium: 0.12, flowUSD: 500_000_000, currencyCode: 'INR', iso3: 'IND',
 };
-
 const corridorOK2 = {
-  destinationName: 'Pakistan',
-  p2pStatus: 'OK',
-  score: 60,
-  premium: 0.08,
-  flowUSD: 200_000_000,
-  currencyCode: 'PKR',
-  iso3: 'PAK',
+  destinationName: 'Pakistan', p2pStatus: 'OK', score: 60,
+  premium: 0.08, flowUSD: 200_000_000, currencyCode: 'PKR', iso3: 'PAK',
 };
-
 const corridorNoData = {
-  destinationName: 'Sudan',
-  p2pStatus: 'No P2P data',
-  score: null,
-  premium: null,
-  flowUSD: 100_000_000,
-  currencyCode: 'SDG',
-  iso3: 'SDN',
+  destinationName: 'Sudan', p2pStatus: 'No P2P data', score: null,
+  premium: null, flowUSD: 100_000_000, currencyCode: 'SDG', iso3: 'SDN',
 };
-
 const corridorNoMapping = {
-  destinationName: 'Unknown Country',
-  p2pStatus: 'No currency mapping',
-  score: null,
-  premium: null,
-  flowUSD: 50_000_000,
-  currencyCode: undefined,
-  iso3: undefined,
+  destinationName: 'Unknown Country', p2pStatus: 'No currency mapping', score: null,
+  premium: null, flowUSD: 50_000_000, currencyCode: undefined, iso3: undefined,
 };
-
 const corridorUSD = {
-  destinationName: 'United States',
-  p2pStatus: 'OK',
-  score: 40,
-  premium: 0.02,
-  flowUSD: 300_000_000,
-  currencyCode: 'USD',
-  iso3: 'USA',
+  destinationName: 'United States', p2pStatus: 'OK', score: 40,
+  premium: 0.02, flowUSD: 300_000_000, currencyCode: 'USD', iso3: 'USA',
 };
-
 const corridorNegativePremium = {
-  destinationName: 'France',
-  p2pStatus: 'OK',
-  score: 30,
-  premium: -0.05,
-  flowUSD: 150_000_000,
-  currencyCode: 'EUR',
-  iso3: 'FRA',
+  destinationName: 'France', p2pStatus: 'OK', score: 30,
+  premium: -0.05, flowUSD: 150_000_000, currencyCode: 'EUR', iso3: 'FRA',
 };
-
 const corridorHighPremium = {
-  destinationName: 'Nigeria',
-  p2pStatus: 'OK',
-  score: 70,
-  premium: 1.5,
-  flowUSD: 250_000_000,
-  currencyCode: 'NGN',
-  iso3: 'NGA',
+  destinationName: 'Nigeria', p2pStatus: 'OK', score: 70,
+  premium: 1.5, flowUSD: 250_000_000, currencyCode: 'NGN', iso3: 'NGA',
 };
-
 const corridorEgypt = {
-  destinationName: 'Egypt, Arab Rep.',
-  p2pStatus: 'OK',
-  score: 75,
-  premium: 0.1,
-  flowUSD: 400_000_000,
-  currencyCode: 'EGP',
-  iso3: 'EGY',
+  destinationName: 'Egypt, Arab Rep.', p2pStatus: 'OK', score: 75,
+  premium: 0.1, flowUSD: 400_000_000, currencyCode: 'EGP', iso3: 'EGY',
 };
 
 describe('Leaderboard', () => {
@@ -88,17 +41,17 @@ describe('Leaderboard', () => {
     expect(screen.getByText('#')).toBeInTheDocument();
   });
 
-  it('shows Composite Score header by default', () => {
+  it('shows Composite Score header for composite metric', () => {
     render(<Leaderboard corridors={[corridorOK]} metric="composite" />);
     expect(screen.getByText('Composite Score')).toBeInTheDocument();
   });
 
-  it('shows USDT Premium header when metric is premium', () => {
+  it('shows USDT Premium header for premium metric', () => {
     render(<Leaderboard corridors={[corridorOK]} metric="premium" />);
     expect(screen.getByText('USDT Premium')).toBeInTheDocument();
   });
 
-  it('shows Remittance Flow header when metric is remittance', () => {
+  it('shows Remittance Flow header for remittance metric', () => {
     render(<Leaderboard corridors={[corridorOK]} metric="remittance" />);
     expect(screen.getByText('Remittance Flow')).toBeInTheDocument();
   });
@@ -106,15 +59,13 @@ describe('Leaderboard', () => {
   it('shows rank 1 for the first valid corridor', () => {
     render(<Leaderboard corridors={[corridorOK]} metric="composite" />);
     const rows = document.querySelectorAll('.leaderboard-row');
-    const firstRank = rows[0].querySelector('.col-rank');
-    expect(firstRank.textContent).toBe('1');
+    expect(rows[0].querySelector('.col-rank').textContent).toBe('1');
   });
 
   it('shows em dash rank for no-data corridors', () => {
     render(<Leaderboard corridors={[corridorNoData]} metric="composite" />);
     const rows = document.querySelectorAll('.leaderboard-row');
-    const rank = rows[0].querySelector('.col-rank');
-    expect(rank.textContent).toBe('—');
+    expect(rows[0].querySelector('.col-rank').textContent).toBe('—');
   });
 
   it('renders valid corridors before no-data corridors', () => {
@@ -124,7 +75,7 @@ describe('Leaderboard', () => {
     expect(rows[1]).toHaveTextContent('Sudan');
   });
 
-  it('shows No P2P data label for no-data corridors', () => {
+  it('shows No P2P data label', () => {
     render(<Leaderboard corridors={[corridorNoData]} metric="composite" />);
     expect(screen.getByText('No P2P data')).toBeInTheDocument();
   });
@@ -134,16 +85,14 @@ describe('Leaderboard', () => {
     expect(screen.getByText('No mapping')).toBeInTheDocument();
   });
 
-  it('applies premium-negative class for corridors with negative premium', () => {
+  it('applies premium-negative class for negative premium', () => {
     render(<Leaderboard corridors={[corridorNegativePremium]} metric="premium" />);
-    const badge = document.querySelector('.metric-badge');
-    expect(badge).toHaveClass('premium-negative');
+    expect(document.querySelector('.metric-badge')).toHaveClass('premium-negative');
   });
 
   it('does not apply premium-negative class for positive premium', () => {
     render(<Leaderboard corridors={[corridorOK]} metric="premium" />);
-    const badge = document.querySelector('.metric-badge');
-    expect(badge).not.toHaveClass('premium-negative');
+    expect(document.querySelector('.metric-badge')).not.toHaveClass('premium-negative');
   });
 
   it('shows high premium warning icon for premium > 100%', () => {
@@ -164,10 +113,10 @@ describe('Leaderboard', () => {
     expect(screen.queryByText('Egypt, Arab Rep.')).not.toBeInTheDocument();
   });
 
-  it('ranks multiple valid corridors correctly by composite score', () => {
+  it('ranks multiple valid corridors descending by composite score', () => {
     render(<Leaderboard corridors={[corridorOK2, corridorOK]} metric="composite" />);
     const rows = document.querySelectorAll('.leaderboard-row');
-    expect(rows[0]).toHaveTextContent('India');   // score 85 → rank 1
-    expect(rows[1]).toHaveTextContent('Pakistan'); // score 60 → rank 2
+    expect(rows[0]).toHaveTextContent('India');
+    expect(rows[1]).toHaveTextContent('Pakistan');
   });
 });

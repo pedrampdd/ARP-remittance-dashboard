@@ -6,7 +6,7 @@ import {
   formatFlow,
   getMetricValue,
   formatMetricValue,
-} from '../utils/format.js';
+} from '../../utils/format.js';
 
 describe('normalizeCountryName', () => {
   it('maps Egypt KNOMAD name to Egypt', () => {
@@ -25,21 +25,21 @@ describe('normalizeCountryName', () => {
     expect(normalizeCountryName('Yemen, Rep.')).toBe('Yemen');
   });
 
-  it('returns unchanged name when no override exists', () => {
+  it('returns the name unchanged when no override exists', () => {
     expect(normalizeCountryName('India')).toBe('India');
   });
 });
 
 describe('formatScore', () => {
-  it('formats integer score', () => {
+  it('formats an integer score', () => {
     expect(formatScore(100)).toBe('100');
   });
 
-  it('rounds decimal score', () => {
+  it('rounds decimal score up', () => {
     expect(formatScore(75.6)).toBe('76');
   });
 
-  it('rounds down', () => {
+  it('rounds decimal score down', () => {
     expect(formatScore(75.4)).toBe('75');
   });
 
@@ -53,7 +53,7 @@ describe('formatScore', () => {
 });
 
 describe('formatPremium', () => {
-  it('formats positive premium', () => {
+  it('formats a positive premium', () => {
     expect(formatPremium(0.143)).toBe('14.3%');
   });
 
@@ -61,11 +61,11 @@ describe('formatPremium', () => {
     expect(formatPremium(0)).toBe('0.0%');
   });
 
-  it('formats negative premium', () => {
+  it('formats a negative premium', () => {
     expect(formatPremium(-0.05)).toBe('-5.0%');
   });
 
-  it('formats large premium over 100%', () => {
+  it('formats a premium over 100%', () => {
     expect(formatPremium(1.5)).toBe('150.0%');
   });
 
@@ -133,7 +133,7 @@ describe('getMetricValue', () => {
     expect(getMetricValue({ score: null }, 'composite')).toBeNull();
   });
 
-  it('returns null for unknown metric', () => {
+  it('returns null for an unknown metric', () => {
     expect(getMetricValue({ score: 85 }, 'unknown')).toBeNull();
   });
 });
@@ -151,7 +151,7 @@ describe('formatMetricValue', () => {
     expect(formatMetricValue(5e8, 'remittance', {})).toBe('$500M');
   });
 
-  it('returns em dash for unknown metric', () => {
+  it('returns em dash for an unknown metric', () => {
     expect(formatMetricValue(85, 'unknown', {})).toBe('—');
   });
 });

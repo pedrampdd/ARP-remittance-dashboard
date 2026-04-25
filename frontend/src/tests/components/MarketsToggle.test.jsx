@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import MarketsToggle from '../components/MarketsToggle.jsx';
+import MarketsToggle from '../../components/MarketsToggle.jsx';
 
 describe('MarketsToggle', () => {
   it('renders all three market buttons', () => {
@@ -16,7 +16,7 @@ describe('MarketsToggle', () => {
     expect(screen.getByText('Market')).toBeInTheDocument();
   });
 
-  it('applies active class to the selected button', () => {
+  it('applies active class only to the selected button', () => {
     render(<MarketsToggle value="UAE" onChange={() => {}} />);
     expect(screen.getByRole('button', { name: 'UAE' })).toHaveClass('active');
     expect(screen.getByRole('button', { name: 'All' })).not.toHaveClass('active');
