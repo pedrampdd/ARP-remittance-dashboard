@@ -1,6 +1,6 @@
 # ARP Digital GPS Dashboard
 
-A strategy dashboard that ranks remittance corridors from UAE and Bahrain by a composite opportunity score, combining remittance volume (World Bank KNOMAD) with USDT premium over official USD rates (Binance P2P vs. Frankfurter/ECB).
+A strategy dashboard that ranks remittance corridors from UAE and Bahrain by a composite opportunity score, combining remittance volume (World Bank KNOMAD) with USDT premium over official USD rates (Binance P2P vs. open.er-api.com).
 
 ---
 
@@ -21,7 +21,7 @@ npm start
 The backend will:
 1. Parse `WB-KNOMAD.xlsx` for UAE and Bahrain remittance flows
 2. Fetch live USDT P2P prices from Binance for each destination currency
-3. Fetch official USD rates from Frankfurter API
+3. Fetch official USD rates from open.er-api.com
 4. Compute composite scores and start listening on **port 3001**
 
 ### Frontend
@@ -56,7 +56,7 @@ Browser (React + Vite)
           │
           ├── knomad.js     → reads WB-KNOMAD.xlsx (sheet "Data")
           ├── binance.js    → POST Binance P2P for USDT prices
-          ├── oanda.js      → GET Frankfurter for official USD rates
+          ├── oanda.js      → GET open.er-api.com for official USD rates
           └── score.js      → premium + composite score computation
 ```
 
@@ -64,7 +64,7 @@ Browser (React + Vite)
 1. Backend parses KNOMAD data → ~28 corridors per sender
 2. Currency codes resolved via static `currencyMap.js`
 3. Binance P2P prices fetched in parallel for each unique currency
-4. Frankfurter rates fetched in one batched request
+4. open.er-api.com rates fetched in one batched request
 5. `premium = (binancePrice / officialRate) - 1`
 6. `rawMargin = flowUSD × premium`
 7. `score` = percentile rank of rawMargin within market, scaled to [1, 100]
@@ -74,16 +74,28 @@ Browser (React + Vite)
 
 ## AI Usage
 
-This project was built with **Claude Code (Sonnet 4.6)**:
+This project was built iteratively with **Claude Code (Sonnet 4.6)** using a human-in-the-loop workflow across five stages:
 
-- **Planning**: Claude generated the full implementation plan (see `plan.md`), including the data model, scoring formula, edge case matrix, and component structure.
-- **Scaffolding**: All backend services, routes, and frontend components were scaffolded by Claude with the plan as specification.
-- **Review**: Claude reviewed the generated code for edge case handling (null P2P data, missing currency mappings, n=1 scoring) and consistency between backend output shape and frontend consumption.
+### 1. Planning
+Claude generated a full implementation plan covering the data model, scoring formula, edge case matrix, API contract, and component structure. The plan was reviewed and approved before any code was written (see `plan.md`).
 
-Human decisions:
+### 2. MVP Build
+With the approved plan as a specification, Claude scaffolded the entire backend (services, routes, scoring logic) and frontend (components, hooks, map integration) in one pass.
+
+### 3. QA via Playwright Agent
+A Playwright-based E2E agent was used to act as an automated QA reviewer — exercising the golden path (market toggle, metric toggle, leaderboard ranking, choropleth coloring) and edge cases (null P2P data, missing currency mappings, single-corridor markets). Issues surfaced by the agent were logged and prioritized.
+
+### 4. Bug Fixes
+Defects identified by the QA agent were fixed: score normalization edge cases, tooltip rendering, leaderboard sort stability for null-score rows, and API shape mismatches between backend and frontend.
+
+### 5. Refactor + Test Coverage
+A second planning pass with Claude produced a refactor plan focused on service decomposition, test structure mirroring the source layout, and expanding unit test coverage across the scoring pipeline, currency mapping, and Binance/OANDA service layers.
+
+**Human decisions throughout:**
 - Confirmed the scoring formula (percentile rank → [1, 100])
-- Chose `react-simple-maps` over Mapbox for simplicity
-- Confirmed Frankfurter as the official rate source
+- Chose `react-simple-maps` over Mapbox for zero-auth simplicity
+- Switched from Frankfurter/ECB to open.er-api.com to cover non-major currencies (EGP, PKR, BDT, NGN, LBP, etc.)
+- Reviewed and approved the plan and refactor scope at each stage before proceeding
 
 ---
 
