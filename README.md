@@ -10,7 +10,24 @@ A strategy dashboard that ranks remittance corridors from UAE and Bahrain by a c
 - Node.js 14+
 - npm
 
-### Backend
+### One-liner (recommended)
+
+```bash
+make dev
+```
+
+Installs dependencies for both backend and frontend, then starts both servers in parallel. `Ctrl+C` stops everything.
+
+Other targets:
+
+```bash
+make install   # install deps only
+make stop      # kill running servers
+```
+
+### Manual
+
+**Backend:**
 
 ```bash
 cd backend
@@ -24,9 +41,7 @@ The backend will:
 3. Fetch official USD rates from open.er-api.com
 4. Compute composite scores and start listening on **port 3001**
 
-### Frontend
-
-In a separate terminal:
+**Frontend** (separate terminal):
 
 ```bash
 cd frontend
