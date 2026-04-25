@@ -40,6 +40,26 @@ describe('calculatePremium', () => {
   test('real-world values', () => {
     expect(calculatePremium(3.76, 3.52)).toBeCloseTo((3.76 / 3.52) - 1, 10);
   });
+
+  test('returns null when officialRate is zero', () => {
+    expect(calculatePremium(100, 0)).toBeNull();
+  });
+
+  test('returns null when officialRate is negative', () => {
+    expect(calculatePremium(100, -10)).toBeNull();
+  });
+
+  test('returns null for non-numeric binancePrice', () => {
+    expect(calculatePremium('100', 100)).toBeNull();
+  });
+
+  test('returns null when premium exceeds sanity bound of 5', () => {
+    expect(calculatePremium(700, 100)).toBeNull(); // premium = 6.0 > 5
+  });
+
+  test('returns value at sanity bound boundary (premium = 5)', () => {
+    expect(calculatePremium(600, 100)).toBeCloseTo(5, 10); // exactly 5.0, not > 5
+  });
 });
 
 describe('enrichCorridors', () => {
@@ -72,21 +92,32 @@ describe('enrichCorridors', () => {
     const prices = { INR: null };
     const rates = { INR: 83.0 };
     const corridors = [{ sender: 'UAE', destinationName: 'India', flowUSD: 1_000_000 }];
-    const result = enrichCorridors(corridors, prices, rates, CURRENCY_MAP, ISO3_MAP);
+    const [c] = enrichCorridors(corridors, prices, rates, CURRENCY_MAP, ISO3_MAP);
 
-    expect(result[0].p2pStatus).toBe('No P2P data');
-    expect(result[0].premium).toBeNull();
-    expect(result[0].rawMargin).toBeNull();
+    expect(c.p2pStatus).toBe('No P2P data');
+    expect(c.premium).toBeNull();
+    expect(c.rawMargin).toBeNull();
   });
 
   test('sets No P2P data when officialRate is null', () => {
     const prices = { INR: 83.5 };
     const rates = { INR: null };
     const corridors = [{ sender: 'UAE', destinationName: 'India', flowUSD: 1_000_000 }];
-    const result = enrichCorridors(corridors, prices, rates, CURRENCY_MAP, ISO3_MAP);
+    const [c] = enrichCorridors(corridors, prices, rates, CURRENCY_MAP, ISO3_MAP);
 
-    expect(result[0].p2pStatus).toBe('No P2P data');
-    expect(result[0].premium).toBeNull();
+    expect(c.p2pStatus).toBe('No P2P data');
+    expect(c.premium).toBeNull();
+  });
+
+  test('sets No P2P data when calculatePremium returns null (e.g. premium > sanity bound)', () => {
+    const prices = { INR: 700 }; // premium = (700/100) - 1 = 6.0 > 5 → calculatePremium returns null
+    const rates = { INR: 100 };
+    const corridors = [{ sender: 'UAE', destinationName: 'India', flowUSD: 1_000_000 }];
+    const [c] = enrichCorridors(corridors, prices, rates, CURRENCY_MAP, ISO3_MAP);
+
+    expect(c.p2pStatus).toBe('OK'); // prices exist, premium just clamped by calculatePremium
+    expect(c.premium).toBeNull();
+    expect(c.rawMargin).toBeNull();
   });
 
   test('sets No currency mapping for unknown country', () => {

@@ -54,19 +54,10 @@ function enrichCorridors(corridors, binancePrices, officialRates, currencyMap, c
       const binancePrice = binancePrices[currencyCode];
       const officialRate = officialRates[currencyCode];
 
-      if (!currencyCode) {
-        p2pStatus = 'No currency mapping';
+      if (binancePrice == null || officialRate == null) {
+        p2pStatus = 'No P2P data';
       } else {
-        const binancePrice = binancePrices[currencyCode];
-        const officialRate = officialRates[currencyCode];
-      
-        if (binancePrice == null) {
-          p2pStatus = 'No P2P data available';
-        } else if (officialRate == null) {
-          p2pStatus = 'No FX rate available';
-        } else {
-          premium = calculatePremium(binancePrice, officialRate);
-        }
+        premium = calculatePremium(binancePrice, officialRate);
       }
     }
 
