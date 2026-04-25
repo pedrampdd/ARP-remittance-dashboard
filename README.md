@@ -7,7 +7,7 @@ A strategy dashboard that ranks remittance corridors from UAE and Bahrain by a c
 ## Setup & Run
 
 ### Prerequisites
-- Node.js 14+
+- Node.js 18+
 - npm
 
 ### One-liner (recommended)
