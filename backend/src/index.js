@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 
 const corridorsRouter = require('./routes/corridors');
 const { fetchAllData } = require('./services/pipeline');
@@ -15,6 +16,10 @@ async function startServer() {
   app.use('/api/corridors', corridorsRouter);
 
   app.get('/health', (req, res) => res.json({ status: 'ok' }));
+
+  const frontendDist = path.join(__dirname, '../../frontend/dist');
+  app.use(express.static(frontendDist));
+  app.get('*', (req, res) => res.sendFile(path.join(frontendDist, 'index.html')));
 
   try {
     const data = await fetchAllData();
